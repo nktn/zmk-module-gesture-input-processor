@@ -53,6 +53,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Re-enable workflow to avoid deactivating scheduled runs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
