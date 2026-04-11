@@ -1,5 +1,6 @@
-# cormoran's ZMK Module Template for ZMK (latest)
+# cormoran's ZMK Module Template for ZMK
 
+![ZMK Version](https://img.shields.io/badge/ZMK-master-blue)
 [![Test](https://github.com/cormoran/zmk-module-template/actions/workflows/zmk-module.yml/badge.svg?branch=main)](https://github.com/cormoran/zmk-module-template/actions/workflows/zmk-module.yml) [![Devcontainer](https://github.com/cormoran/zmk-module-template/actions/workflows/devcontainer.yml/badge.svg?branch=main)](https://github.com/cormoran/zmk-module-template/actions/workflows/devcontainer.yml)
 
 This repository contains a template for a ZMK module, as it would most frequently be used.
