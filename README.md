@@ -114,8 +114,8 @@ west zmk-test tests -m .
 
 ### Coding agent on actions
 
-Actions for github copilot, claude (experimental) and codex (not useful yet) are available.
+Actions for github copilot and claude are available.
 
 - Mention `@copilot`
-- Setup `OPENAI_API_KEY` secret and mention `@codex`
 - Setup `ANTHROPIC_API_KEY` secret and mention `@claude`
+  - Or fix [claude.yml](./github/workflows/claude.yml) to use `CLAUDE_CODE_OAUTH_TOKEN`

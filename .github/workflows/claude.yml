@@ -40,8 +40,10 @@ jobs:
         if: github.event_name != 'push'
         id: claude
         uses: anthropics/claude-code-action@v1
+        timeout-minutes: 60
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Or claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
           # Optional: Customize the trigger phrase (default: @claude)
           # trigger_phrase: "/claude"
