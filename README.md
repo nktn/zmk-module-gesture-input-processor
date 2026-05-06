@@ -36,13 +36,13 @@ For more info on modules, you can read through through the [Zephyr modules page]
            ...
            - name: zmk-module-template
            remote: cormoran
-           revision: main+custom-studio-rpc # or latest commit hash
+           revision: main+custom-studio-protocol # or latest commit hash
            # import: true # if this module has other dependencies
            ...
            # Required: patched ZMK with custom Studio RPC support
            - name: zmk
            remote: cormoran
-           revision: main+custom-studio-rpc
+           revision: main+custom-studio-protocol
            import:
                file: app/west.yml
    ```

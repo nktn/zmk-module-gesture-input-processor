@@ -21,7 +21,7 @@ jobs:
         uses: AndreasAugustin/actions-template-sync@v2
         with:
           source_repo_path: cormoran/zmk-module-template
-          upstream_branch: main+custom-studio-rpc
+          upstream_branch: main+custom-studio-protocol
           # pr_labels: <label1>,<label2>[,...] # defaults to template_sync
   repo-sync-fallback:
     runs-on: ubuntu-latest
@@ -40,6 +40,6 @@ jobs:
         uses: AndreasAugustin/actions-template-sync@v2
         with:
           source_repo_path: cormoran/zmk-module-template
-          upstream_branch: main+custom-studio-rpc
+          upstream_branch: main+custom-studio-protocol
           target_gh_token: ${{ secrets.GH_TOKEN }}
           # pr_labels: <label1>,<label2>[,...] # defaults to template_sync
