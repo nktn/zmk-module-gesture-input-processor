@@ -41,6 +41,16 @@ repos:
         files: ^web/
         pass_filenames: false
 
+  # Web code: Build
+  - repo: local
+    hooks:
+      - id: web-build
+        name: web build
+        entry: bash -c 'cd web && npm run build'
+        language: system
+        files: ^web/
+        pass_filenames: false
+
   # ZMK module: Python tests
   - repo: local
     hooks:
