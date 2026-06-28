@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import platform
 import shutil
 import subprocess
@@ -7,6 +9,7 @@ from pathlib import Path
 from dataclasses import dataclass
 
 THIS_DIR = Path(__file__).parent.resolve()
+TEST_BUILD_DIR_NAME = "tests-zmk-module-template-with-custom-studio-rpc"
 
 
 def run_west(args: list[str]) -> subprocess.CompletedProcess[str]:
@@ -44,7 +47,7 @@ class WestCommandsTests(unittest.TestCase):
         platform.system() == "Linux", "zmk-test is only supported on Linux"
     )
     def test_zmk_test(self):
-        test_build_dir = self.BUILD_DIR / THIS_DIR.name
+        test_build_dir = self.BUILD_DIR / TEST_BUILD_DIR_NAME
         shutil.rmtree(test_build_dir, ignore_errors=True)
 
         result = run_west(["zmk-test", "tests", "-m", ".", "-d", str(test_build_dir)])
