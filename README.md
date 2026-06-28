@@ -72,7 +72,7 @@ See [web/README.md](./web/README.md) for web UI development instructions.
 
 ### Publishing Web UI
 
-**GitHub Pages**: Visit `Actions > Test and Build Web UI > Run workflow` to deploy to `https://<account>.github.io/<repo>/`.
+**GitHub Pages**: Merge a pull request into `main+custom-studio-protocol` to deploy to `https://<account>.github.io/<repo>/`.
 
 **Cloudflare Workers (PR previews)**: Configure `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets.
 

@@ -18,6 +18,8 @@ Key things to replace:
 - Update `zephyr/module.yml`: change the module name.
 - Update `README.md`: replace template descriptions with your module's description.
 - Update `web/vite.config.ts`: change `base` to your repository name.
+- Update references to `main+custom-studio-protocol` if your module should track a different ZMK/custom Studio protocol branch.
+- Update firmware artifact names in `tests/zmk-config/build.yaml` to match your module name.
 
 Remove this "Initialization" section from AGENTS.md (CLAUDE.md is symlink) after completing all items.
 
