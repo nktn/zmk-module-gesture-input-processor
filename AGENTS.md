@@ -20,6 +20,7 @@ Key things to replace:
 - Update `web/vite.config.ts`: change `base` to your repository name.
 - Update references to `main+custom-studio-protocol` if your module should track a different ZMK/custom Studio protocol branch.
 - Update firmware artifact names in `tests/zmk-config/build.yaml` to match your module name.
+- Update `TEST_BUILD_DIR_NAME` in `test.py` to a project-specific name such as `tests-<module name>` so test builds do not share `build/tests` with other projects.
 
 Remove this "Initialization" section from AGENTS.md (CLAUDE.md is symlink) after completing all items.
 
