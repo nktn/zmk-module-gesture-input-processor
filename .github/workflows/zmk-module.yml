@@ -10,12 +10,27 @@ on:
       - .github/workflows/devcontainer.yml
       - .github/workflows/claude.yml
       - .github/workflows/codex.yml
+      - .github/workflows/template-sync.yml
       - .github/workflows/web-ui.yml
       - .github/actions/zmk-env/**
       - .gitignore
       - .claude/**
+      - "LICENSE"
       - "web/**"
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - .github/workflows/copilot-setup-steps.yml
+      - .github/workflows/devcontainer.yml
+      - .github/workflows/claude.yml
+      - .github/workflows/codex.yml
+      - .github/workflows/template-sync.yml
+      - .github/workflows/web-ui.yml
+      - .github/actions/zmk-env/**
+      - .gitignore
+      - .claude/**
+      - "LICENSE"
+      - "web/**"
   workflow_dispatch:
   schedule:
     # 20:00 JST every Friday (11:00 UTC)
