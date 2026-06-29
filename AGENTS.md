@@ -2,7 +2,7 @@ This repository contains a ZMK module with Web UI using the **unofficial** custo
 
 ## Repository bootstrap
 
-When creating a new repository from this template, use the `zmk-module-from-template` skill. It creates the empty GitHub repository, clones this template beside the current directory, rewires `origin` and `template` remotes, resets `main` to `template/main+custom-studio-protocol`, pushes `main`, and creates the implementation branch.
+When creating a new repository from this template, use the `zmk-module-from-template` skill included at `skills/zmk-module-from-template/`. It creates the empty GitHub repository, clones this template beside the current directory, rewires `origin` and `template` remotes, resets `main` to `template/main+custom-studio-protocol`, pushes `main`, and creates the implementation branch.
 
 After bootstrapping, continue with the Initialization checklist below inside the new repository.
 
