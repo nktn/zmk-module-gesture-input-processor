@@ -1,12 +1,15 @@
-# ZMK Module Template - Web Frontend
+# Gesture Input Processor - Web Frontend
 
-This is a minimal web application template for interacting with ZMK firmware
-modules that implement custom Studio RPC subsystems.
+Web UI for configuring the ZMK gesture input processor module
+(`zmk-module-gesture-input-processor`) over the custom Studio RPC subsystem
+`nktn__gesture`.
 
 ## Features
 
 - **Device Connection**: Connect to ZMK devices via Bluetooth (GATT) or Serial
-- **Custom RPC**: Communicate with your custom firmware module using protobuf
+- **Gesture Settings**: Per-instance enable toggle, active-layer mask,
+  threshold, reset time, and cooldown — applied live and persisted on the
+  device
 - **React + TypeScript**: Modern web development with Vite for fast builds
 - **react-zmk-studio**: Uses the `@cormoran/zmk-studio-react-hook` library for
   simplified ZMK integration
@@ -35,22 +38,24 @@ npm test
 ```
 src/
 ├── main.tsx              # React entry point
-├── App.tsx               # Main application with connection UI
+├── App.tsx               # Connection UI + GestureProcessorManager
 ├── App.css               # Styles
 └── proto/                # Generated protobuf TypeScript types
-    └── your-name/template/
-        └── template.ts
+    └── nktn/gesture/
+        └── gesture.ts
 
 test/
-├── App.spec.tsx              # Tests for App component
-└── RPCTestSection.spec.tsx   # Tests for RPC functionality
+├── App.spec.tsx                     # Tests for App component
+└── GestureProcessorManager.spec.tsx # Tests for the gesture settings UI
 ```
 
 ## How It Works
 
 ### 1. Protocol Definition
 
-The protobuf schema is defined in `../proto/your-name/template/template.proto`.
+The protobuf schema is defined in `../proto/nktn/gesture/gesture.proto`. It is
+the single source of truth shared with the firmware; do not edit the generated
+`src/proto/` files by hand.
 
 ### 2. Code Generation
 
@@ -72,13 +77,22 @@ import { useZMKApp, ZMKCustomSubsystem } from "@cormoran/zmk-studio-react-hook";
 // Connect to device
 const { state, connect, findSubsystem, isConnected } = useZMKApp();
 
-// Find your subsystem
-const subsystem = findSubsystem("your_name__template");
+// Find the gesture subsystem
+const subsystem = findSubsystem("nktn__gesture");
 
 // Create service and make RPC calls
 const service = new ZMKCustomSubsystem(state.connection, subsystem.index);
 const response = await service.callRPC(payload);
 ```
+
+### 4. RPC Flow
+
+`ListProcessorsRequest` returns an empty response; the firmware then sends one
+`Notification { processor_state }` per gesture processor instance. The UI
+merges notifications by `id`. Field updates (`SetEnabledRequest`,
+`SetActiveLayersRequest`, `SetThresholdRequest`, `SetResetMsRequest`,
+`SetCooldownMsRequest`) are sent per changed field and confirmed via the same
+notification channel.
 
 ## Testing
 
@@ -105,7 +119,7 @@ import {
 
 const mockZMKApp = createConnectedMockZMKApp({
   deviceName: "Test Device",
-  subsystems: ["your_name__template"],
+  subsystems: ["nktn__gesture"],
 });
 
 render(
@@ -114,16 +128,3 @@ render(
   </ZMKAppProvider>
 );
 ```
-
-## Customization
-
-To adapt this template for your own ZMK module:
-
-1. **Update the proto file**: Modify `../proto/your-name/template/template.proto` with
-   your message types
-2. **Regenerate types**: Run `npm run generate`
-3. **Update subsystem identifier**: Change `SUBSYSTEM_IDENTIFIER` in `App.tsx`
-   to match your firmware registration
-4. **Update RPC logic**: Modify the request/response handling in `App.tsx`
-5. **Update tests**: Modify tests to match your custom subsystem identifier and
-   functionality

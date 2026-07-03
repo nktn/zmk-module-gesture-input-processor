@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package nktn.gesture;
+
+// Runtime-adjustable state of one gesture input processor instance.
+// Direction->behavior bindings are fixed in devicetree and not exposed here.
+message GestureProcessorInfo {
+  uint32 id = 1;
+  string name = 2;
+  bool enabled = 3;
+  // Bitmask of layer indices where the gesture is active. 0 means "active on
+  // all layers" (same convention as zmk-module-runtime-input-processor).
+  uint32 active_layers = 4;
+  // Accumulated movement counts required to fire a gesture.
+  uint32 threshold = 5;
+  // Accumulated movement resets after this many ms without motion.
+  uint32 reset_ms = 6;
+  // Minimum ms between consecutive gesture firings.
+  uint32 cooldown_ms = 7;
+}
+
+message ListProcessorsRequest {}
+// Intentionally empty: instance data is delivered as one Notification per
+// instance after this request (runtime-input-processor pattern).
+message ListProcessorsResponse {}
+
+message SetEnabledRequest {
+  uint32 id = 1;
+  bool enabled = 2;
+}
+
+message SetActiveLayersRequest {
+  uint32 id = 1;
+  uint32 active_layers = 2;
+}
+
+message SetThresholdRequest {
+  uint32 id = 1;
+  uint32 threshold = 2;
+}
+
+message SetResetMsRequest {
+  uint32 id = 1;
+  uint32 reset_ms = 2;
+}
+
+message SetCooldownMsRequest {
+  uint32 id = 1;
+  uint32 cooldown_ms = 2;
+}
+
+message OkResponse {}
+
+message ErrorResponse {
+  string message = 1;
+}
+
+message Request {
+  oneof request_type {
+    ListProcessorsRequest list_processors = 1;
+    SetEnabledRequest set_enabled = 2;
+    SetActiveLayersRequest set_active_layers = 3;
+    SetThresholdRequest set_threshold = 4;
+    SetResetMsRequest set_reset_ms = 5;
+    SetCooldownMsRequest set_cooldown_ms = 6;
+  }
+}
+
+message Response {
+  oneof response_type {
+    ListProcessorsResponse list_processors = 1;
+    OkResponse ok = 2;
+    ErrorResponse error = 3;
+  }
+}
+
+message Notification {
+  oneof notification_type {
+    GestureProcessorInfo processor_state = 1;
+  }
+}

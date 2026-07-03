@@ -1,5 +1,6 @@
 {
-  "name": "web",
+  "name": "zmk-module-gesture-input-processor-web",
+  "description": "Web UI for configuring the ZMK trackball gesture input processor via custom Studio RPC",
   "private": true,
   "version": "0.0.0",
   "type": "module",

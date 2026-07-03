@@ -1,0 +1,4 @@
+# nanopb options for nktn.gesture
+# name must fit CONFIG_ZMK_GESTURE_INPUT_PROCESSOR_NAME_MAX_LEN (8 incl. NUL)
+nktn.gesture.GestureProcessorInfo.name max_size:8
+nktn.gesture.ErrorResponse.message max_size:64

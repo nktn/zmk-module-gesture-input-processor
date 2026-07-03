@@ -2,7 +2,7 @@ name: Test and Build Web UI
 
 on:
   push:
-    branches: ["main+custom-studio-protocol"]
+    branches: ["main"]
     paths:
       - "web/**"
       - ".github/workflows/web-ui.yml"
@@ -96,7 +96,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: versions upload --assets dist --name zmk-module-web-ui --compatibility-date 2026-01-11
+          command: versions upload --assets dist --name zmk-module-gesture-input-processor-web-ui --compatibility-date 2026-01-11
           wranglerVersion: '4.58.0'
           workingDirectory: web
 

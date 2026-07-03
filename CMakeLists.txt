@@ -1,9 +1,12 @@
-zephyr_include_directories(include)
-if(CONFIG_ZMK_TEMPLATE_FEATURE)
-    # target_sources(app PRIVATE ...)
+# Gesture Input Processor CMakeLists.txt
 
-    if(CONFIG_ZMK_TEMPLATE_FEATURE_STUDIO_RPC)
-        file(GLOB_RECURSE C_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+zephyr_include_directories(include)
+if(CONFIG_ZMK_GESTURE_INPUT_PROCESSOR)
+    target_sources(app PRIVATE src/input_processors/input_processor_gesture.c)
+    target_sources(app PRIVATE src/events/gesture_processor_state_changed.c)
+
+    if(CONFIG_ZMK_GESTURE_INPUT_PROCESSOR_STUDIO_RPC)
+        file(GLOB_RECURSE C_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/studio/*.c)
         target_sources(app PRIVATE ${C_FILES})
 
         list(APPEND CMAKE_MODULE_PATH ${ZEPHYR_BASE}/modules/nanopb)

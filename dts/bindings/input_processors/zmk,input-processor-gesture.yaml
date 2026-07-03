@@ -1,0 +1,89 @@
+# Copyright (c) 2026 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+description: |
+  Gesture input processor for ZMK.
+
+  Accumulates REL_X / REL_Y movement per axis. Once the accumulated
+  |movement| on either axis exceeds `threshold`, one of the four `bindings`
+  entries is invoked as a tap (press then release) according to the
+  direction of the larger-magnitude axis, both accumulators reset, and
+  `cooldown-ms` of extra movement is ignored before accumulation resumes.
+  Accumulation also resets after `reset-ms` of inactivity so a slow drift
+  can never build up enough to fire a gesture.
+
+  While enabled and active for the current layer, this processor consumes
+  every REL_X / REL_Y event it sees (the event never reaches processors
+  later in the chain), so pointer motion / scrolling stops while a gesture
+  is being recognized.
+
+compatible: "zmk,input-processor-gesture"
+
+include: base.yaml
+
+properties:
+  processor-label:
+    type: string
+    required: true
+    description: |
+      Short label identifying this processor instance for runtime
+      configuration (custom Studio RPC / settings key). Must fit within
+      CONFIG_ZMK_GESTURE_INPUT_PROCESSOR_NAME_MAX_LEN bytes, terminating NUL
+      included (8 by default).
+
+  bindings:
+    type: phandle-array
+    required: true
+    description: |
+      Exactly 4 behavior bindings, invoked as a tap when a gesture fires, in
+      this fixed order: up, down, left, right.
+
+  threshold:
+    type: int
+    default: 600
+    description: |
+      Accumulated |REL_X| or |REL_Y| movement required to fire a gesture.
+
+  reset-ms:
+    type: int
+    default: 150
+    description: |
+      Both accumulators reset to 0 if no matching REL_X / REL_Y event
+      arrives for this many milliseconds.
+
+  cooldown-ms:
+    type: int
+    default: 200
+    description: |
+      Minimum time in milliseconds between two gesture firings. Matching
+      events are still consumed (not passed through) during the cooldown,
+      but are not accumulated, so the next gesture always starts from 0.
+
+  active-layers:
+    type: int
+    default: 0
+    description: |
+      Bitmask of layer indices where the processor is active (0 = active on
+      all layers). Same convention as zmk-module-runtime-input-processor:
+      bit N corresponds to layer index N, and the processor is active if at
+      least one of the referenced layers is currently active.
+
+  start-enabled:
+    type: boolean
+    description: |
+      If present, the processor starts enabled as soon as it initializes.
+      If absent, it starts disabled and must be enabled at runtime (e.g. via
+      the Studio Web UI) before it recognizes gestures. Named "start-enabled"
+      rather than "enabled" to avoid clashing with the runtime RPC field of
+      the same name.
+
+  track-remainders:
+    type: boolean
+    description: |
+      Standard ZMK input-processor property queried by the input-processor
+      chain macros; unused by this driver since it fully consumes matching
+      events rather than producing a scaled value with a remainder.
+
+  "#input-processor-cells":
+    type: int
+    const: 0

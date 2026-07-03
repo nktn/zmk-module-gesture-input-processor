@@ -1,10 +1,14 @@
-config ZMK_TEMPLATE_FEATURE
-    bool "Enable template feature"
+config ZMK_GESTURE_INPUT_PROCESSOR
+    bool "Enable gesture input processor feature"
 
-if ZMK_TEMPLATE_FEATURE
+if ZMK_GESTURE_INPUT_PROCESSOR
 
-config ZMK_TEMPLATE_FEATURE_STUDIO_RPC
-    bool "Enable template feature custom Studio RPC"
+config ZMK_GESTURE_INPUT_PROCESSOR_STUDIO_RPC
+    bool "Enable gesture input processor custom Studio RPC"
     depends on ZMK_STUDIO
+
+config ZMK_GESTURE_INPUT_PROCESSOR_NAME_MAX_LEN
+    int "Maximum length of gesture input processor names (including NUL terminator)"
+    default 8
 
 endif

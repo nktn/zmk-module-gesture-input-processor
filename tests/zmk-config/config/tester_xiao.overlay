@@ -1,3 +1,26 @@
+#include <dt-bindings/zmk/keys.h>
+
+/*
+ * Present only when CONFIG_ZMK_GESTURE_INPUT_PROCESSOR is enabled so the
+ * "feature disabled" build artifact doesn't link a devicetree node whose
+ * backing driver was left out of the build (see CMakeLists.txt).
+ * The node isn't wired into any real input-listener's `input-processors`
+ * chain -- like zmk-module-runtime-input-processor's own build test, this
+ * simply exercises devicetree binding parsing + driver instantiation.
+ */
+#ifdef CONFIG_ZMK_GESTURE_INPUT_PROCESSOR
+/ {
+	gesture_test_processor: gesture_test_processor {
+		compatible = "zmk,input-processor-gesture";
+		processor-label = "gest";
+		threshold = <600>;
+		reset-ms = <150>;
+		cooldown-ms = <200>;
+		bindings = <&kp UP>, <&kp DOWN>, <&kp LEFT>, <&kp RIGHT>;
+		#input-processor-cells = <0>;
+	};
+};
+#endif
 
 &board_cdc_acm_uart {
 	status = "disabled";
