@@ -107,12 +107,11 @@ class WestCommandsTests(unittest.TestCase):
         for artifact, entries in artifacts_and_expected_build_params.items():
             artifact_dir = self.BUILD_DIR / artifact / "zephyr"
             config_path = artifact_dir / ".config"
+            # Zephyr 3.5 (cormoran/zmk v0.3-branch) generates the header
+            # directly under include/generated/, without the zephyr/ subdir
+            # that newer Zephyr versions add.
             device_tree_path = (
-                artifact_dir
-                / "include"
-                / "generated"
-                / "zephyr"
-                / "devicetree_generated.h"
+                artifact_dir / "include" / "generated" / "devicetree_generated.h"
             )
             self._test_strings_in_file(
                 config_path, entries.config, f"{artifact} config"
