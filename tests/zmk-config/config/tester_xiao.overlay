@@ -22,6 +22,9 @@
 };
 #endif
 
-&board_cdc_acm_uart {
-	status = "disabled";
-};
+/*
+ * Note: unlike the modern zmk board layouts, v0.3-branch's seeeduino_xiao_ble
+ * (sourced from the Zephyr board tree) has no `board_cdc_acm_uart` labeled
+ * node -- its console runs over hardware UART0. CONFIG_CONSOLE=n in
+ * tester_xiao.conf is what actually disables the console here.
+ */

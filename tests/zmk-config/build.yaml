@@ -1,15 +1,15 @@
 include:
   - artifact: module_gesture_board_feature_disabled
-    board: xiao_ble//zmk
+    board: seeeduino_xiao_ble
     shield: tester_xiao
 
   - artifact: module_gesture_board_with_rpc
-    board: xiao_ble//zmk
+    board: seeeduino_xiao_ble
     shield: tester_xiao
     cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_POINTING=y -DCONFIG_ZMK_GESTURE_INPUT_PROCESSOR=y -DCONFIG_ZMK_GESTURE_INPUT_PROCESSOR_STUDIO_RPC=y
     snippet: studio-rpc-usb-uart
 
   - artifact: module_gesture_board_without_rpc
-    board: xiao_ble//zmk
+    board: seeeduino_xiao_ble
     shield: tester_xiao
     cmake-args: -DCONFIG_ZMK_POINTING=y -DCONFIG_ZMK_GESTURE_INPUT_PROCESSOR=y

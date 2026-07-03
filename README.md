@@ -194,7 +194,7 @@ west zmk-test tests -m .
 cd web && npm test
 ```
 
-`tests/zmk-config` builds three firmware artifacts (feature disabled, feature enabled with Studio RPC, feature enabled without Studio RPC) against a `zmk,input-processor-gesture` devicetree instance to verify the binding and driver compile and link. `tests/studio` boots a native_sim image and checks that the `nktn__gesture` custom Studio RPC subsystem registers successfully.
+`tests/zmk-config` builds three firmware artifacts (feature disabled, feature enabled with Studio RPC, feature enabled without Studio RPC) against a `zmk,input-processor-gesture` devicetree instance to verify the binding and driver compile and link. `tests/studio` boots a native_posix_64 image and checks that the `nktn__gesture` custom Studio RPC subsystem registers successfully.
 
 ## Publishing Web UI
 
