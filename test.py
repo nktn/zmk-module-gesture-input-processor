@@ -67,7 +67,11 @@ class WestCommandsTests(unittest.TestCase):
                     ],
                     device=[
                         "DT_COMPAT_HAS_OKAY_zmk_keymap",
-                        NotFound("DT_COMPAT_HAS_OKAY_zmk_input_processor_gesture"),
+                        # The gesture node is declared unconditionally in the
+                        # overlay (DTS preprocessing can't see Kconfig), so it
+                        # is present even when the feature is disabled; the
+                        # config check above proves the driver is not built.
+                        "DT_COMPAT_HAS_OKAY_zmk_input_processor_gesture",
                     ],
                 ),
                 "module_gesture_board_with_rpc": ConfigAndDeviceTree(

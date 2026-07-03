@@ -1,14 +1,15 @@
 #include <dt-bindings/zmk/keys.h>
 
 /*
- * Present only when CONFIG_ZMK_GESTURE_INPUT_PROCESSOR is enabled so the
- * "feature disabled" build artifact doesn't link a devicetree node whose
- * backing driver was left out of the build (see CMakeLists.txt).
+ * The node is present in every build artifact: devicetree preprocessing
+ * cannot see Kconfig symbols, so it cannot be conditionally declared here.
+ * With CONFIG_ZMK_GESTURE_INPUT_PROCESSOR=n the node simply has no backing
+ * driver, which is exactly the "node declared but feature disabled" case the
+ * feature_disabled artifact exists to keep building.
  * The node isn't wired into any real input-listener's `input-processors`
  * chain -- like zmk-module-runtime-input-processor's own build test, this
  * simply exercises devicetree binding parsing + driver instantiation.
  */
-#ifdef CONFIG_ZMK_GESTURE_INPUT_PROCESSOR
 / {
 	gesture_test_processor: gesture_test_processor {
 		compatible = "zmk,input-processor-gesture";
@@ -20,7 +21,6 @@
 		#input-processor-cells = <0>;
 	};
 };
-#endif
 
 /*
  * Note: unlike the modern zmk board layouts, v0.3-branch's seeeduino_xiao_ble
