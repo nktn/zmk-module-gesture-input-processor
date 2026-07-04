@@ -6,11 +6,23 @@ description: |
 
   Accumulates REL_X / REL_Y movement per axis. Once the accumulated
   |movement| on either axis exceeds `threshold`, one of the four `bindings`
-  entries is invoked as a tap (press then release) according to the
-  direction of the larger-magnitude axis, both accumulators reset, and
-  `cooldown-ms` of extra movement is ignored before accumulation resumes.
-  Accumulation also resets after `reset-ms` of inactivity so a slow drift
-  can never build up enough to fire a gesture.
+  entries is invoked as a tap (press then release, `tap-ms` apart) according
+  to the direction of the larger-magnitude axis, both accumulators reset,
+  and `cooldown-ms` of extra movement is ignored before accumulation
+  resumes.
+
+  By default the processor is one-shot: once it fires, it disarms itself
+  and won't fire again until the ball has been idle for `reset-ms` (which
+  also resets the accumulators), so a trackball's mechanical inertia
+  coasting past the cooldown window can't repeatedly re-trigger the same
+  direction. Setting `reset-ms` to `0` disables both the idle-reset and the
+  one-shot re-arm, falling back to firing every `cooldown-ms` for as long as
+  the ball keeps rolling (continuous/repeat mode).
+
+  The press/release pair is dispatched asynchronously on the system
+  workqueue rather than synchronously from the input event callback, so a
+  slow/blocking behavior invocation (e.g. USB HID submission) never stalls
+  input event processing.
 
   While enabled and active for the current layer, this processor consumes
   every REL_X / REL_Y event it sees (the event never reaches processors
@@ -49,7 +61,12 @@ properties:
     default: 150
     description: |
       Both accumulators reset to 0 if no matching REL_X / REL_Y event
-      arrives for this many milliseconds.
+      arrives for this many milliseconds. This idle time also re-arms the
+      one-shot firing mechanism: after firing, the processor won't fire
+      again until the ball has been idle for this long. Set to 0 to disable
+      both the idle-reset and the one-shot re-arm, i.e. fall back to
+      "continuous repeat" mode where a gesture fires again every
+      `cooldown-ms` for as long as the ball keeps rolling.
 
   cooldown-ms:
     type: int
@@ -58,6 +75,16 @@ properties:
       Minimum time in milliseconds between two gesture firings. Matching
       events are still consumed (not passed through) during the cooldown,
       but are not accumulated, so the next gesture always starts from 0.
+
+  tap-ms:
+    type: int
+    default: 10
+    description: |
+      Milliseconds between the press and release of the tap invoked when a
+      gesture fires. The release is dispatched asynchronously (system
+      workqueue) after this delay; no further gesture can be detected until
+      the release has been invoked. Compile-time only -- not adjustable at
+      runtime over the Studio RPC / web UI.
 
   active-layers:
     type: int

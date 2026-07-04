@@ -11,4 +11,16 @@ config ZMK_GESTURE_INPUT_PROCESSOR_NAME_MAX_LEN
     int "Maximum length of gesture input processor names (including NUL terminator)"
     default 8
 
+config ZMK_GESTURE_INPUT_PROCESSOR_SETTINGS_SAVE_DEBOUNCE_MS
+    int "Debounce time (ms) before gesture processor settings are saved to flash"
+    default 5000
+    help
+      How long to wait after the last runtime change (enabled, active layers,
+      threshold, reset-ms, cooldown-ms) before persisting gesture processor
+      settings to flash. Deliberately much shorter than ZMK's general
+      CONFIG_ZMK_SETTINGS_SAVE_DEBOUNCE (60000 ms by default), so that
+      adjusting settings from the web UI and then quickly power-cycling or
+      resetting the board (as is common while tuning gesture parameters)
+      doesn't silently lose the change.
+
 endif

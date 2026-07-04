@@ -12,16 +12,23 @@ It uses the same **unofficial** custom ZMK Studio RPC protocol as [zmk-module-te
 The processor sits in an input-processor chain (typically in front of your pointer/scroll processors) and:
 
 1. Accumulates `REL_X` / `REL_Y` movement into two per-axis counters.
-2. Once `|accumulated X|` or `|accumulated Y|` reaches `threshold`, it resolves a direction — `REL_X` positive is **right**, `REL_Y` positive is **down** — and taps (press then release) the devicetree-bound behavior for that direction.
+2. Once `|accumulated X|` or `|accumulated Y|` reaches `threshold`, it resolves a direction — `REL_X` positive is **right**, `REL_Y` positive is **down** — and taps (press then release, `tap-ms` apart) the devicetree-bound behavior for that direction. The press and release are dispatched on the system workqueue rather than inline from the input event callback, so a slow/blocking behavior invocation (e.g. USB HID submission) never stalls input processing.
 3. Both counters reset to 0 after firing, and further accumulation is suppressed for `cooldown-ms` so a single big flick doesn't fire repeatedly.
 4. If no matching event arrives for `reset-ms`, the counters reset to 0 on their own, so a slow drift can never build up enough to fire a gesture.
+
+### One-shot by default
+
+By default, firing a gesture **disarms** the processor: it won't fire again until the ball has been idle for `reset-ms` (the same idle timeout used for accumulator reset above re-arms it). This is what stops a trackball's mechanical inertia — the ball still coasting after your flick — from re-triggering the same direction over and over once `cooldown-ms` elapses.
+
+Set **`reset-ms` to `0`** to opt back into continuous/repeat mode: the one-shot re-arm (and the idle-based accumulator reset) is disabled, and a gesture fires again every `cooldown-ms` for as long as the ball keeps rolling — useful if you want e.g. holding a flick to repeat a keypress.
 
 While the processor is enabled and active for the current layer, it **consumes every matching `REL_X`/`REL_Y` event** — pointer motion / scrolling from processors later in the chain stops during a gesture. When disabled, or not active on the current layer, events pass through untouched.
 
 ## Features
 
 - **4-direction gestures**: up / down / left / right, each bound to any ZMK behavior in devicetree (`&kp`, `&mo`, `&sk`, custom behaviors, ...)
-- **Runtime configuration via Studio Web UI**: enable/disable, active layers, threshold, reset timeout, and cooldown — all adjustable live and persisted to flash
+- **One-shot by default, with an opt-in continuous mode**: firing disarms the processor until the ball has been idle for `reset-ms`; set `reset-ms` to `0` to fire repeatedly every `cooldown-ms` instead
+- **Runtime configuration via Studio Web UI**: enable/disable, active layers, threshold, reset timeout, and cooldown — all adjustable live and persisted to flash within a few seconds
 - **Active Layers**: restrict gesture recognition to specific layers using a bitmask (same convention as [zmk-module-runtime-input-processor](https://github.com/cormoran/zmk-module-runtime-input-processor))
 - **Multiple instances**: define one processor per input device (e.g. one per trackball on a split keyboard)
 
@@ -80,8 +87,9 @@ CONFIG_ZMK_LOW_PRIORITY_THREAD_STACK_SIZE=2048
         bindings = <&kp UP>, <&kp DOWN>, <&kp LEFT>, <&kp RIGHT>;
 
         threshold = <600>;    // accumulated movement required to fire
-        reset-ms = <150>;     // idle time before accumulation resets
+        reset-ms = <150>;     // idle time before accumulation resets + one-shot re-arm (0 = continuous repeat)
         cooldown-ms = <200>;  // minimum time between two firings
+        tap-ms = <10>;        // press-to-release delay of the fired tap
         active-layers = <0>;  // 0 = active on all layers
 
         // Uncomment to have gestures recognized from firmware boot without
@@ -114,9 +122,9 @@ For a split keyboard, define the processor on whichever side actually reports th
    - **Enabled**: turn gesture recognition on/off
    - **Active Layers**: bitmask of layers where the processor is active (`0` = all layers)
    - **Threshold**: accumulated movement required to fire
-   - **Reset (ms)**: idle time before accumulation resets
+   - **Reset (ms)**: idle time before accumulation resets, and before the one-shot mechanism re-arms after firing (`0` = continuous repeat, firing every cooldown while the ball keeps rolling)
    - **Cooldown (ms)**: minimum time between firings
-5. Changes apply immediately and are persisted to flash — no reflash needed.
+5. Changes apply immediately and are persisted to flash a few seconds later (debounced) — no reflash needed.
 
 See [web/README.md](./web/README.md) for web UI development instructions.
 
@@ -129,10 +137,11 @@ See [web/README.md](./web/README.md) for web UI development instructions.
 | Enabled            | `start-enabled` | `enabled`        | `false` | Whether the processor recognizes gestures                |
 | Active layers      | `active-layers` | `active_layers`  | `0` (all layers) | Bitmask of layers where the processor is active |
 | Threshold          | `threshold`     | `threshold`      | `600`   | Accumulated `\|REL_X\|`/`\|REL_Y\|` required to fire       |
-| Reset timeout      | `reset-ms`      | `reset_ms`       | `150`   | Idle time (ms) before accumulation resets to 0            |
+| Reset timeout      | `reset-ms`      | `reset_ms`       | `150`   | Idle time (ms) before accumulation resets to 0; also the one-shot re-arm idle time. `0` = continuous repeat (fires every cooldown while rolling), disabling one-shot mode |
 | Cooldown           | `cooldown-ms`   | `cooldown_ms`    | `200`   | Minimum time (ms) between two firings                     |
+| Tap duration       | `tap-ms`        | -                | `10`    | Milliseconds between the fired tap's press and release (compile-time only) |
 
-Runtime changes made through the RPC fields above are persisted to flash automatically (debounced) and immediately reflected back to any connected Studio client.
+Runtime changes made through the RPC fields above are persisted to flash automatically (debounced by `CONFIG_ZMK_GESTURE_INPUT_PROCESSOR_SETTINGS_SAVE_DEBOUNCE_MS`, 5 seconds by default) and immediately reflected back to any connected Studio client.
 
 ## Development Guide
 

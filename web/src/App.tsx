@@ -498,7 +498,10 @@ export function GestureProcessorManager() {
           <h3>Reset Time</h3>
           <p className="help-text">
             Accumulated movement resets after this many ms without motion (
-            {RESET_MS_MIN}-{RESET_MS_MAX}). 0 disables the automatic reset.
+            {RESET_MS_MIN}-{RESET_MS_MAX}). This idle time also re-arms one-shot
+            firing: after a gesture fires, it won't fire again until the ball
+            has been still for this long. 0 = continuous repeat (fires every
+            cooldown while rolling), disabling one-shot mode.
           </p>
           <div className="input-group">
             <label htmlFor="reset-ms">Reset (ms):</label>
