@@ -615,7 +615,7 @@ int zmk_gesture_processor_get_config(const struct device *dev, const char **name
         .index = n,                                                                                \
         .name = DT_INST_PROP(n, processor_label),                                                  \
         .bindings = gesture_bindings_##n,                                                          \
-        .initial_threshold = DT_INST_PROP_OR(n, threshold, 600),                                   \
+        .initial_threshold = DT_INST_PROP_OR(n, threshold, 150),                                   \
         .initial_reset_ms = DT_INST_PROP_OR(n, reset_ms, 150),                                     \
         .initial_cooldown_ms = DT_INST_PROP_OR(n, cooldown_ms, 200),                               \
         .initial_active_layers = DT_INST_PROP_OR(n, active_layers, 0),                             \

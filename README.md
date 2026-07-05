@@ -86,7 +86,7 @@ CONFIG_ZMK_LOW_PRIORITY_THREAD_STACK_SIZE=2048
         // Fixed order: up, down, left, right
         bindings = <&kp UP>, <&kp DOWN>, <&kp LEFT>, <&kp RIGHT>;
 
-        threshold = <600>;    // accumulated movement required to fire
+        threshold = <150>;    // accumulated movement required to fire
         reset-ms = <150>;     // idle time before accumulation resets + one-shot re-arm (0 = continuous repeat)
         cooldown-ms = <200>;  // minimum time between two firings
         tap-ms = <10>;        // press-to-release delay of the fired tap
@@ -136,7 +136,7 @@ See [web/README.md](./web/README.md) for web UI development instructions.
 | Direction bindings| `bindings`      | -                | (required) | Exactly 4 behaviors, in order: up, down, left, right    |
 | Enabled            | `start-enabled` | `enabled`        | `false` | Whether the processor recognizes gestures                |
 | Active layers      | `active-layers` | `active_layers`  | `0` (all layers) | Bitmask of layers where the processor is active |
-| Threshold          | `threshold`     | `threshold`      | `600`   | Accumulated `\|REL_X\|`/`\|REL_Y\|` required to fire       |
+| Threshold          | `threshold`     | `threshold`      | `150`   | Accumulated `\|REL_X\|`/`\|REL_Y\|` required to fire       |
 | Reset timeout      | `reset-ms`      | `reset_ms`       | `150`   | Idle time (ms) before accumulation resets to 0; also the one-shot re-arm idle time. `0` = continuous repeat (fires every cooldown while rolling), disabling one-shot mode |
 | Cooldown           | `cooldown-ms`   | `cooldown_ms`    | `200`   | Minimum time (ms) between two firings                     |
 | Tap duration       | `tap-ms`        | -                | `10`    | Milliseconds between the fired tap's press and release (compile-time only) |

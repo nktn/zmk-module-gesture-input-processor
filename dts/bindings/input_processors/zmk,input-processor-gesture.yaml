@@ -52,7 +52,7 @@ properties:
 
   threshold:
     type: int
-    default: 600
+    default: 150
     description: |
       Accumulated |REL_X| or |REL_Y| movement required to fire a gesture.
 
